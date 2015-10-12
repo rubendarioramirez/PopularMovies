@@ -28,20 +28,21 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<String> MovieArrayAdapter;
     public static MainActivity baseInstance;
     private ImageAdapter imageAdapter;
-    private    GridView gridview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_info);
 
         MovieArrayAdapter = new ArrayList<String>();
+        Log.v("APPLOG", "The movie list is" + MovieArrayAdapter.size());
 
+        GridView gridView = (GridView) findViewById(R.id.gridView);
+        imageAdapter = new ImageAdapter(this, MovieArrayAdapter);
 
-        gridview = (GridView) findViewById(R.id.gridView);
-        imageAdapter = new ImageAdapter(this);
-        gridview.setAdapter(imageAdapter);
+        gridView.setAdapter(imageAdapter);
 
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 Toast.makeText(MainActivity.this, "" + position,
@@ -204,15 +205,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String[] results) {
-            for (String s : results) {
-                MovieArrayAdapter.add(s);
-
-                Log.v("APPLOG", MovieArrayAdapter.get(MovieArrayAdapter.size() - 1) + "   " + MovieArrayAdapter.size());
+            if(results != null ){
+                MovieArrayAdapter.clear();
+                for (String s : results) {
+                    MovieArrayAdapter.add(s);
+                    Log.v("APPLOG", MovieArrayAdapter.get(MovieArrayAdapter.size() - 1) + "   " + MovieArrayAdapter.size());
             }
 
-
-//            imageAdapter = new ImageAdapter(baseInstance);
-//            gridview.setAdapter(imageAdapter);
+            }
         }
     }
 
