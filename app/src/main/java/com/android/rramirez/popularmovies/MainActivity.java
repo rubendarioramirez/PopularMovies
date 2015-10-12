@@ -5,6 +5,11 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,13 +21,35 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    public ArrayList<String> MovieArrayAdapter;
+    public static MainActivity baseInstance;
+    private ImageAdapter imageAdapter;
+    private    GridView gridview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_info);
+
+        MovieArrayAdapter = new ArrayList<String>();
+
+
+        gridview = (GridView) findViewById(R.id.gridView);
+        imageAdapter = new ImageAdapter(this);
+        gridview.setAdapter(imageAdapter);
+
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Toast.makeText(MainActivity.this, "" + position,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        baseInstance = this;
     }
 
     @Override
@@ -69,15 +96,14 @@ public class MainActivity extends AppCompatActivity {
                 overview = oneMovie.getString("overview");
 
                 //This is for debugging purposes
-                resultStrs[i] = id + title + release + poster + votes + overview;
+                //resultStrs[i] = id + title + release + poster + votes + overview;
+                resultStrs[i] = poster;
             }
 
             for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Movies entry: " + s);
+                //Log.v(LOG_TAG, "Movies entry: " + s);
             }
             return resultStrs;
-
-
         }
 
         @Override
@@ -109,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
                 URL url = new URL(builtUri.toString());
 
-                Log.v(LOG_TAG, "Built URI " + builtUri.toString());
+                //Log.v(LOG_TAG, "Built URI " + builtUri.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -172,14 +198,24 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
             }
-
-
-
             return null;
 
         }
 
+        @Override
+        protected void onPostExecute(String[] results) {
+            for (String s : results) {
+                MovieArrayAdapter.add(s);
 
+                Log.v("APPLOG", MovieArrayAdapter.get(MovieArrayAdapter.size() - 1) + "   " + MovieArrayAdapter.size());
+            }
+
+
+//            imageAdapter = new ImageAdapter(baseInstance);
+//            gridview.setAdapter(imageAdapter);
+        }
     }
+
+
 
 }
