@@ -1,5 +1,6 @@
 package com.android.rramirez.popularmovies;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -27,9 +28,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public ImageAdapter MovieArrayAdapter;
-    public ArrayList<String> ArrayListData;
-    public static MainActivity baseInstance;
-
+    public ArrayList<String> ArrayPosterData;
+    public ArrayList<String> ArrayTitleData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,21 +37,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_info);
 
 
-        ArrayListData = new ArrayList<String>();
-        MovieArrayAdapter = new ImageAdapter(this, ArrayListData);
-        //Log.v("APPLOG", "The movie list is" + MovieArrayAdapter.size());
+        ArrayPosterData = new ArrayList<String>();
+        ArrayTitleData = new ArrayList<String>();
+        //ArrayAdapter uses 2 parameters defined in ImageAdapter.
+        //This: which is the app context.
+        //ArrayListData: which is the data retrieved from AsyncTask.
+        MovieArrayAdapter = new ImageAdapter(this, ArrayPosterData);
+
         GridView myGridView=(GridView)findViewById(R.id.gridView);
         myGridView.setAdapter(MovieArrayAdapter);
+        myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Toast.makeText(MainActivity.this, ArrayTitleData.get(position), Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        baseInstance = this;
-    }
+        };
+
 
     @Override
     public void onStart() {
+        updateMovies();
+        super.onStart();
+    }
 
+    //Supporting function to update movies
+    public void updateMovies(){
         FetchMoviesTask fetchMovies = new FetchMoviesTask();
         fetchMovies.execute();
-        super.onStart();
     }
 
     public class FetchMoviesTask extends AsyncTask<String, Void, String[]> {
@@ -91,12 +105,13 @@ public class MainActivity extends AppCompatActivity {
 
                 //This is for debugging purposes
                 //resultStrs[i] = id + title + release + poster + votes + overview;
-                resultStrs[i] = poster;
+                resultStrs[i] = poster + "," + title;
             }
 
+            /*Only for debug uses
             for (String s : resultStrs) {
                 //Log.v(LOG_TAG, "Movies entry: " + s);
-            }
+            }*/
             return resultStrs;
         }
 
@@ -128,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
                         .build();
 
                 URL url = new URL(builtUri.toString());
-
-                //Log.v(LOG_TAG, "Built URI " + builtUri.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -198,14 +211,21 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String[] results) {
-            if(results != null ){
-                ArrayListData.clear();
+            if (results != null) {
+                ArrayPosterData.clear();
                 for (String s : results) {
-                    ArrayListData.add(s);
-                    MovieArrayAdapter.notifyDataSetChanged();
-                    Log.v("APPLOG", "Array Size" + ArrayListData.size());
-            }
+                    //ParseInfo, comencing from 0 will return in a different Index each result such as Title, Poster, etc
+                    String[] splitResult = s.split(",");
+                    //Log.v("APPLOG", "" + splitResult[1] );
 
+                    //Add data to the PosterArray list
+                    ArrayPosterData.add(splitResult[0]);
+                    //Add data to the TItle List
+                    ArrayTitleData.add(splitResult[1]);
+
+                    //Notify the adapter that the list has data now, otherwise will be empty.
+                    MovieArrayAdapter.notifyDataSetChanged();
+                }
             }
         }
     }
