@@ -19,36 +19,29 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public ArrayList<String> MovieArrayAdapter;
+    public ImageAdapter MovieArrayAdapter;
+    public ArrayList<String> ArrayListData;
     public static MainActivity baseInstance;
-    private ImageAdapter imageAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_info);
 
-        MovieArrayAdapter = new ArrayList<String>();
-        Log.v("APPLOG", "The movie list is" + MovieArrayAdapter.size());
 
-        GridView gridView = (GridView) findViewById(R.id.gridView);
-        imageAdapter = new ImageAdapter(this, MovieArrayAdapter);
-
-        gridView.setAdapter(imageAdapter);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(MainActivity.this, "" + position,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        ArrayListData = new ArrayList<String>();
+        MovieArrayAdapter = new ImageAdapter(this, ArrayListData);
+        //Log.v("APPLOG", "The movie list is" + MovieArrayAdapter.size());
+        GridView myGridView=(GridView)findViewById(R.id.gridView);
+        myGridView.setAdapter(MovieArrayAdapter);
 
         baseInstance = this;
     }
@@ -206,10 +199,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String[] results) {
             if(results != null ){
-                MovieArrayAdapter.clear();
+                ArrayListData.clear();
                 for (String s : results) {
-                    MovieArrayAdapter.add(s);
-                    Log.v("APPLOG", MovieArrayAdapter.get(MovieArrayAdapter.size() - 1) + "   " + MovieArrayAdapter.size());
+                    ArrayListData.add(s);
+                    MovieArrayAdapter.notifyDataSetChanged();
+                    Log.v("APPLOG", "Array Size" + ArrayListData.size());
             }
 
             }
