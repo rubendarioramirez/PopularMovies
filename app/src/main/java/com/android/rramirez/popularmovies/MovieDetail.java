@@ -34,7 +34,6 @@ public class MovieDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-
         //Instantiate the bundle and get those juicy extras
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -47,28 +46,21 @@ public class MovieDetail extends AppCompatActivity {
         String poster = (String) bundle.get("Poster");
 
         //Dont forget to get the elements by id
-        title_tv = (TextView)findViewById(R.id.title_tv);
         release_tv = (TextView)findViewById(R.id.release_tv);
         vote_tv = (TextView)findViewById(R.id.vote_tv);
         plot_tv = (TextView)findViewById(R.id.plot_tv);
         poster_iv =(ImageView)findViewById(R.id.poster_iv);
 
-
+        //Set actionTitle bar with the movie title.
+        setTitle(title);
         //Set to each element a different dataSource
-        title_tv.setText(title);
         release_tv.setText("Release date: " + release);
         vote_tv.setText("Rating: " + votes);
         plot_tv.setText(plot);
         url = "https://image.tmdb.org/t/p/w500" + poster;
-
-      //  Picasso.with(this).load(poster).into(poster_iv);
+        //Picasso to take care of display the picture
         Picasso.with(this).load(url).into(poster_iv);
 
-    }
-    public String getMovieData(){
-
-
-        return title;
     }
 
 }

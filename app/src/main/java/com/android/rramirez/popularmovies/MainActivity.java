@@ -1,5 +1,6 @@
 package com.android.rramirez.popularmovies;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,6 +8,9 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,26 +38,29 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<String> ArrayReleaseData;
     public ArrayList<String> ArrayVoteData;
     public ArrayList<String> ArrayPlotData;
+    private ProgressDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_info);
 
+        //Create a dialog to communicate progress to the user. Specially useful for slow connections
+        loadingDialog = ProgressDialog.show(this, "Loading your favourite movies", "Please wait", true);
 
+        //Declare Arrays to help with the data
         ArrayPosterData = new ArrayList<String>();
         ArrayTitleData = new ArrayList<String>();
         ArrayReleaseData = new ArrayList<String>();
         ArrayVoteData = new ArrayList<String>();
         ArrayPlotData = new ArrayList<String>();
 
-
         //ArrayAdapter uses 2 parameters defined in ImageAdapter.
         //This: which is the app context.
         //ArrayListData: which is the data retrieved from AsyncTask.
         MovieArrayAdapter = new ImageAdapter(this, ArrayPosterData);
 
-        GridView myGridView=(GridView)findViewById(R.id.gridView);
+        GridView myGridView = (GridView) findViewById(R.id.gridView);
         myGridView.setAdapter(MovieArrayAdapter);
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -73,7 +80,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        };
+    }
+
+    ;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
     @Override
@@ -83,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Supporting function to update movies
-    public void updateMovies(){
+    public void updateMovies() {
         FetchMoviesTask fetchMovies = new FetchMoviesTask();
         fetchMovies.execute();
     }
@@ -102,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
             //Get the last 10 movies
             String[] resultStrs = new String[movieAmount];
             //Hardcoded 10 because i just want the first 10
-            for(int i = 0; i < movieAmount; i++) {
+            for (int i = 0; i < movieAmount; i++) {
 
                 //Define variables to retrieve pertienent data
                 String id;
@@ -125,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //This is for debugging purposes
                 //resultStrs[i] = id + title + release + poster + votes + overview;
-                resultStrs[i] = poster + "," + title + "," + release + "," + votes + "," + plot ;
+                resultStrs[i] = poster + "," + title + "," + release + "," + votes + "," + plot;
             }
 
             /*Only for debug uses
@@ -149,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
             //Add here your API KEY
             String apiKey = "517f8ef140f1f60cea8eead4849d8e93";
             //How many movies we want to query
-            int movieAmount = 10;
+            int movieAmount = 12;
 
             try {
 
@@ -194,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 moviesJSONstr = buffer.toString();
 
-               // Log.v("APPLOG", moviesJSONstr);
+                // Log.v("APPLOG", moviesJSONstr);
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
@@ -253,9 +281,10 @@ public class MainActivity extends AppCompatActivity {
                     MovieArrayAdapter.notifyDataSetChanged();
                 }
             }
+            //Dismiss dialog after AsyncTask is done.
+            loadingDialog.dismiss();
         }
     }
-
 
 
 }

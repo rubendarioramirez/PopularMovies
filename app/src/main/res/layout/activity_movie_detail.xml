@@ -6,25 +6,13 @@
 
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/poster_iv"
         android:layout_row="0"
         android:layout_column="1"
         android:layout_gravity="center"
-        android:layout_below="@+id/vote_tv"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Title"
-        android:id="@+id/title_tv"
-        android:layout_row="1"
-        android:layout_column="0"
-        android:layout_gravity="left" />
+        android:layout_below="@+id/vote_tv" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,7 +23,6 @@
         android:layout_row="2"
         android:layout_column="2"
         android:layout_gravity="right"
-        android:layout_below="@+id/title_tv"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -62,7 +49,6 @@
         android:layout_row="30"
         android:layout_column="2"
         android:layout_gravity="right"
-        android:layout_below="@+id/title_tv"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="33dp" />
