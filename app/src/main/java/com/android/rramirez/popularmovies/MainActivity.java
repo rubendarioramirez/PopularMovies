@@ -1,6 +1,7 @@
 package com.android.rramirez.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     public ImageAdapter MovieArrayAdapter;
     public ArrayList<String> ArrayPosterData;
     public ArrayList<String> ArrayTitleData;
+    public ArrayList<String> ArrayReleaseData;
+    public ArrayList<String> ArrayVoteData;
+    public ArrayList<String> ArrayPlotData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayPosterData = new ArrayList<String>();
         ArrayTitleData = new ArrayList<String>();
+        ArrayReleaseData = new ArrayList<String>();
+        ArrayVoteData = new ArrayList<String>();
+        ArrayPlotData = new ArrayList<String>();
+
+
         //ArrayAdapter uses 2 parameters defined in ImageAdapter.
         //This: which is the app context.
         //ArrayListData: which is the data retrieved from AsyncTask.
@@ -49,7 +58,18 @@ public class MainActivity extends AppCompatActivity {
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(MainActivity.this, ArrayTitleData.get(position), Toast.LENGTH_SHORT).show();
+
+                //Toast for debugging purposes.
+                //Toast.makeText(MainActivity.this, ArrayTitleData.get(position), Toast.LENGTH_SHORT).show();
+
+                //Launch Movie details and pass proper parameters
+                Intent intent = new Intent(getApplicationContext(), MovieDetail.class);
+                intent.putExtra("Title", ArrayTitleData.get(position));
+                intent.putExtra("Release", ArrayReleaseData.get(position));
+                intent.putExtra("Vote", ArrayVoteData.get(position));
+                intent.putExtra("Plot", ArrayPlotData.get(position));
+                intent.putExtra("Poster", ArrayPosterData.get(position));
+                startActivity(intent);
             }
         });
 
@@ -90,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 String release;
                 String poster;
                 String votes;
-                String overview;
+                String plot;
 
                 // Get the JSON object representing the day
                 JSONObject oneMovie = movieArray.getJSONObject(i);
@@ -101,11 +121,11 @@ public class MainActivity extends AppCompatActivity {
                 release = oneMovie.getString("release_date");
                 poster = oneMovie.getString("poster_path");
                 votes = oneMovie.getString("vote_average");
-                overview = oneMovie.getString("overview");
+                plot = oneMovie.getString("overview");
 
                 //This is for debugging purposes
                 //resultStrs[i] = id + title + release + poster + votes + overview;
-                resultStrs[i] = poster + "," + title;
+                resultStrs[i] = poster + "," + title + "," + release + "," + votes + "," + plot ;
             }
 
             /*Only for debug uses
@@ -222,6 +242,12 @@ public class MainActivity extends AppCompatActivity {
                     ArrayPosterData.add(splitResult[0]);
                     //Add data to the TItle List
                     ArrayTitleData.add(splitResult[1]);
+                    //ADd data to the Release list
+                    ArrayReleaseData.add(splitResult[2]);
+                    //Add data to the Votes list
+                    ArrayVoteData.add(splitResult[3]);
+                    //Add data to the Plot list
+                    ArrayPlotData.add(splitResult[4]);
 
                     //Notify the adapter that the list has data now, otherwise will be empty.
                     MovieArrayAdapter.notifyDataSetChanged();
