@@ -3,8 +3,10 @@ package com.android.rramirez.popularmovies;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -84,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
     ;
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            updateMovies();
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
@@ -112,14 +114,33 @@ public class MainActivity extends AppCompatActivity {
 
     //Supporting function to update movies
     public void updateMovies() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String sort_by_pref = prefs.getString("sort_by_list","0");
+        //Log.v("APPLOG", "" + sort_by_pref);
         FetchMoviesTask fetchMovies = new FetchMoviesTask();
-        fetchMovies.execute();
+        fetchMovies.execute(sort_by_pref);
     }
+
+
+
 
     public class FetchMoviesTask extends AsyncTask<String, Void, String[]> {
 
         private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
 
+        public String parseOrder(String sort_by){
+            if(sort_by.equals("0")){
+                String order = "popularity.desc";
+                Log.v("APPLOG", "THE ORDER IS " + order);
+                return order;
+            }
+            else if (sort_by.equals("1")) {
+                String order = "vote_average.desc";
+                Log.v("APPLOG", "THE ORDER IS " + order);
+                return order;
+            }
+            return  "popularity.desc";
+        }
 
         private String[] getMoviesFromJson(String MoviesJsonStr, int movieAmount)
                 throws JSONException {
@@ -172,12 +193,13 @@ public class MainActivity extends AppCompatActivity {
 
             // Will contain the raw JSON response as a string.
             String moviesJSONstr = null;
+            String order = parseOrder(params[0]);
 
-            String order = "popularity.desc";
             //Add here your API KEY
             String apiKey = "517f8ef140f1f60cea8eead4849d8e93";
             //How many movies we want to query
             int movieAmount = 12;
+
 
             try {
 
@@ -191,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
                         .build();
 
                 URL url = new URL(builtUri.toString());
+
+                Log.v("APPLOG" , "URL IS " + url );
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
