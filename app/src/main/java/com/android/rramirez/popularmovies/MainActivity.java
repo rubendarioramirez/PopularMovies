@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<String> ArrayVoteData;
     public ArrayList<String> ArrayPlotData;
     private ProgressDialog loadingDialog;
+    public TextView sort_by_tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Create a dialog to communicate progress to the user. Specially useful for slow connections
         loadingDialog = ProgressDialog.show(this, "Loading your favourite movies", "Please wait", true);
+
+        //Find the sortbytextview
+        sort_by_tv = (TextView)findViewById(R.id.sort_by_tv);
 
         //Declare Arrays to help with the data
         ArrayPosterData = new ArrayList<String>();
@@ -62,14 +67,13 @@ public class MainActivity extends AppCompatActivity {
         //ArrayListData: which is the data retrieved from AsyncTask.
         MovieArrayAdapter = new ImageAdapter(this, ArrayPosterData);
 
+
         GridView myGridView = (GridView) findViewById(R.id.gridView);
         myGridView.setAdapter(MovieArrayAdapter);
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
-                //Toast for debugging purposes.
-                //Toast.makeText(MainActivity.this, ArrayTitleData.get(position), Toast.LENGTH_SHORT).show();
 
                 //Launch Movie details and pass proper parameters
                 Intent intent = new Intent(getApplicationContext(), MovieDetail.class);
@@ -114,11 +118,21 @@ public class MainActivity extends AppCompatActivity {
 
     //Supporting function to update movies
     public void updateMovies() {
+
+        //Get sharedPref and get info from sort_by_list key
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String sort_by_pref = prefs.getString("sort_by_list","0");
-        //Log.v("APPLOG", "" + sort_by_pref);
+
+        //Update the textView to display the type of sorting
+        switch (sort_by_pref){
+            case "0":  sort_by_tv.setText("Sorted By: Most Popular");
+                break;
+            case "1": sort_by_tv.setText("Sorted By: Highest Rating");
+                break;
+        }
         FetchMoviesTask fetchMovies = new FetchMoviesTask();
         fetchMovies.execute(sort_by_pref);
+
     }
 
 
@@ -196,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
             String order = parseOrder(params[0]);
 
             //Add here your API KEY
-            String apiKey = "517f8ef140f1f60cea8eead4849d8e93";
+            String apiKey = "YOUR API KEY GOES HERE";
             //How many movies we want to query
             int movieAmount = 12;
 
@@ -284,7 +298,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String[] results) {
             if (results != null) {
+                //Clear all data before starting updating the movies
                 ArrayPosterData.clear();
+                ArrayTitleData.clear();
+                ArrayReleaseData.clear();
+                ArrayVoteData.clear();
+                ArrayPlotData.clear();
+
                 for (String s : results) {
                     //ParseInfo, comencing from 0 will return in a different Index each result such as Title, Poster, etc
                     String[] splitResult = s.split(",");
