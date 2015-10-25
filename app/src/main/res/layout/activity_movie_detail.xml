@@ -1,55 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.rramirez.popularmovies.InfoFragment">
+    tools:context="com.android.rramirez.popularmovies.InfoFragment"
+    android:orientation="vertical">
 
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/poster_iv"
-        android:layout_row="0"
-        android:layout_column="1"
-        android:layout_gravity="center"
-        android:layout_below="@+id/vote_tv" />
-
-    <TextView
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Release"
-        android:id="@+id/release_tv"
-        android:layout_row="2"
-        android:layout_column="2"
-        android:layout_gravity="right"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/scrollView" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="plot"
-        android:id="@+id/plot_tv"
-        android:layout_row="29"
-        android:layout_column="2"
-        android:layout_gravity="bottom|left"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="112dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="votes"
-        android:id="@+id/vote_tv"
-        android:layout_row="30"
-        android:layout_column="2"
-        android:layout_gravity="right"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="33dp" />
-</RelativeLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingTop="8dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/poster_iv"
+                    android:layout_row="0"
+                    android:layout_column="1"
+                    android:layout_gravity="center|left"
+                    android:layout_below="@+id/vote_tv"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="votes"
+                        android:id="@+id/vote_tv"
+                        android:layout_row="30"
+                        android:layout_column="2"
+                        android:layout_gravity="left"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Watch Trailer"
+                        android:id="@+id/trailer_btn"
+                        android:layout_gravity="right" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Release"
+                android:id="@+id/release_tv"
+                android:layout_row="2"
+                android:layout_column="2"
+                android:layout_gravity="left"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="plot"
+                android:id="@+id/plot_tv"
+                android:layout_row="29"
+                android:layout_column="2"
+                android:layout_gravity="bottom|left"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:paddingBottom="5dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -48,14 +48,14 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(300, 300));
+            imageView.setLayoutParams(new GridView.LayoutParams(450, 450));
         } else {
             imageView = (ImageView) convertView;
         }
 
         //URL Helpers - Possible to change image size for "w92", "w154", "w185", "w342", "w500", "w780"
         base_url = "https://image.tmdb.org/t/p";
-        imageSize = "/w185";
+        imageSize = "/w342";
         url = base_url + imageSize;
 
 
