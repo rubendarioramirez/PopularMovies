@@ -13,6 +13,7 @@
         android:id="@+id/gridView"
         android:layout_gravity="center"
         android:numColumns="auto_fit"
+        android:scaleType="centerInside"
         />
 
     <TextView

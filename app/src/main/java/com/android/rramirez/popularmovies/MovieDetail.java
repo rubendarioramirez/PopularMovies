@@ -1,26 +1,18 @@
 package com.android.rramirez.popularmovies;
 
-import android.content.Context;
+
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
+import java.util.ArrayList;
 
 public class MovieDetail extends AppCompatActivity {
 
-    private TextView title_tv;
     private TextView release_tv;
     private TextView vote_tv;
     private TextView plot_tv;
@@ -34,6 +26,8 @@ public class MovieDetail extends AppCompatActivity {
     private String poster;
     private String url;
 
+    public ArrayList<String> ArrayTrailerData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +37,8 @@ public class MovieDetail extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
+        ArrayTrailerData = new ArrayList<String>();
+
         //Get extras by name
         title = (String) bundle.get("Title");
         release = (String) bundle.get("Release");
@@ -51,7 +47,7 @@ public class MovieDetail extends AppCompatActivity {
         poster = (String) bundle.get("Poster");
         ID = (String) bundle.get("ID");
 
-        Log.v("MOVIEDETAIL", "The id is: " + ID);
+        //Log.v("MOVIEDETAIL", "The id is: " + ID);
 
         //Dont forget to get the elements by id
         release_tv = (TextView)findViewById(R.id.release_tv);
@@ -68,6 +64,13 @@ public class MovieDetail extends AppCompatActivity {
         url = "https://image.tmdb.org/t/p/w500" + poster;
         //Picasso to take care of display the picture
         Picasso.with(this).load(url).into(poster_iv);
+
+        FetchTrailersTask fetchTrailers = new FetchTrailersTask(this);
+        fetchTrailers.execute(ID);
+
+        if(ArrayTrailerData.size() !=0){
+            Log.v("APP", "A ver " );
+        }
 
     }
 

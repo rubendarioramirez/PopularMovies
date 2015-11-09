@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<String> ArrayReleaseData;
     public ArrayList<String> ArrayVoteData;
     public ArrayList<String> ArrayPlotData;
+    public ArrayList<String> ArrayTrailerData;
     public ProgressDialog loadingDialog;
     public TextView sort_by_tv;
 
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayVoteData = new ArrayList<String>();
         ArrayPlotData = new ArrayList<String>();
         ArrayIDData = new ArrayList<String>();
+        ArrayTrailerData = new ArrayList<String>();
 
         //ArrayAdapter uses 2 parameters defined in ImageAdapter.
         //This: which is the app context.
