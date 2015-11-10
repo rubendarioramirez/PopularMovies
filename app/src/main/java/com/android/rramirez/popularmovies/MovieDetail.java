@@ -2,12 +2,16 @@ package com.android.rramirez.popularmovies;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
@@ -34,18 +38,25 @@ public class MovieDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-
         ArrayTrailerData = new ArrayList<String>();
 
         setUpActivity();
 
         getTrailers();
 
+        trailer_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchTrailer();
+            }
+
+        });
 
     }
 
-    public void showData(){
-        Log.v("APPLOG", "The item is: " + ArrayTrailerData.get(0));
+    public void enableTrailers(){
+        //Enable the button just if the Trailer AsyncTask was finished to avoid ugly surprises
+        trailer_btn.setEnabled(true);
     }
 
     public void getTrailers(){
@@ -84,5 +95,11 @@ public class MovieDetail extends AppCompatActivity {
         Picasso.with(this).load(url).into(poster_iv);
     }
 
+    public void launchTrailer(){
+        //Creates the URL and launch the intent
+        Uri uri = Uri.parse("https://www.youtube.com/watch?v="+ArrayTrailerData.get(0));
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+    }
 
 }

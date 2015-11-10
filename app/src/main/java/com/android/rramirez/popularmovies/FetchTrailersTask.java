@@ -157,7 +157,7 @@ public class FetchTrailersTask  extends AsyncTask<String, Void, String[]> {
 
             }
 
-            movieDetail.showData();
+            movieDetail.enableTrailers();
         }
 
     }

@@ -56,7 +56,8 @@
                         android:layout_height="wrap_content"
                         android:text="Watch Trailer"
                         android:id="@+id/trailer_btn"
-                        android:layout_gravity="right" />
+                        android:layout_gravity="right"
+                        android:enabled="false" />
 
                 </LinearLayout>
 
