@@ -68,10 +68,11 @@ public class MovieDetail extends AppCompatActivity {
         FetchTrailersTask fetchTrailers = new FetchTrailersTask(this);
         fetchTrailers.execute(ID);
 
-        if(ArrayTrailerData.size() !=0){
-            Log.v("APP", "A ver " );
-        }
 
+    }
+
+    public void showData(){
+        Log.v("APPLOG", "The item is: " + ArrayTrailerData.get(0));
     }
 
 }

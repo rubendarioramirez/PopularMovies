@@ -154,6 +154,7 @@ public class FetchTrailersTask  extends AsyncTask<String, Void, String[]> {
                 //ParseInfo, comencing from 0 will return in a different Index each result such as Title, Poster, etc
                 movieDetail.ArrayTrailerData.add(s);
                 Log.v("Results are" , "" + s);
+                movieDetail.showData();
             }
 
 
